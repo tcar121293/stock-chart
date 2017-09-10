@@ -1,28 +1,21 @@
 export default function chartReducer(
     state={
-        columnNames:[],
-        error:false,
-        data:[]
+       series:[]
     },
     action
 ){
     switch(action.type){
 
-        case 'GET_DATA':{
-            return {
-                ...state,
-                error:false,
-                columnNames:action.payload.column_names,
-                data:action.payload
+        case 'STOCK_DATA':{
+            return {...state,
+             series: [...state.series,{
+                 name:action.payload.name,
+                 data:action.payload.data
+            }]
 
             }
         }
-        case 'ERROR':{
-            return{
-                ...state,
-                error:true
-            }
-        }
+   
         default:
         return state
     }

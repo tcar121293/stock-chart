@@ -1,24 +1,25 @@
 import axios from 'axios'
-import io from 'socket.io-client';
-const socket = io('http://localhost:3000')
 
 
-export function getData(symbol){
-        socket.emit('getdata',symbol)   
+export function sendData(symbol){
+    axios({
+        method:'post',
+        url:'/',
+        data:symbol
+    })
 }
-export function reciveData(){
+
+export function storeData(data){
     return dispatch=>{
-        socket.on('err',()=>{
-            dispatch({type:'ERROR'})  
-      }
-    )
-    socket.on('getData',(data)=>{
-        dispatch({type:'GET_DATA', payload:data})  
-  }
-)
+        const jsondata = data.data.map((data)=>{
+            return [new Date(data[0]).getTime(), data[4]];
+        })
+          console.log(jsondata)
+        dispatch({type:'STOCK_DATA',payload:{
+            name:data.name,
+            data:jsondata
+        }})
     }
-    
 }
-
 
     

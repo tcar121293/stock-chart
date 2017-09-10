@@ -1,28 +1,36 @@
 import  React, { Component }  from 'react'
 import { connect } from 'react-redux'
+import io from 'socket.io-client';
+const socket = io('http://localhost:3000')
 
-import { getData, reciveData } from '../actions/chartActions'
+import { sendData, storeData } from '../actions/chartActions'
 
 import Chart from '../components/Chart'
 
  class Layout extends Component{
 constructor(){
     super()
-    this.getData = this.getData.bind(this)
+    this.sendData = this.sendData.bind(this)
+    socket.on('sendData',(data)=>{
+        var hiJson = data.data.map(function(d) {
+            return [new Date(d[0]).getTime(), d[4]]
+          });
+     
+        this.props.storeData(data)
+    })
+
 }
 
-componentWillMount(){
-    this.props.reciveData()
-}
+
+
+
+
     render(){
         return(
             <div>
-               <Chart
-                error={this.props.error}
-                columnNames={this.props.columnNames}
-                data={this.props.data}
-                getData = {this.getData} 
-                
+               <Chart  
+               series = {this.props.series}
+               sendData = {this.sendData}
                 />
             </div>
         )
@@ -30,17 +38,12 @@ componentWillMount(){
 
 //functions
 
-getData(){
+sendData(){
+
     const symbol = document.getElementById('symbol').value
-    this.props.getData(symbol)
+    this.props.sendData({'symbol':symbol})
 
 }
-
-
-
-
-
-
 
 
 
@@ -49,20 +52,18 @@ getData(){
 
 const mapStateToProps = (state)=>{
     return{
-        data:state.chart.data,
-        columnNames:state.chart.columnNames,
-        error:state.chart.error,
+    series: state.chart.series
 
     }
 }
 const mapDispatchToProps = (dispatch)=>{
     return{
-        getData:(symbol)=>{
-            getData(symbol)
-        },
-        reciveData:()=>{
-            dispatch(reciveData())
-        }
+      sendData:(symbol)=>{
+          sendData(symbol)
+      },
+      storeData: (data)=>{
+          dispatch(storeData(data))
+      }
     }
 }
 
