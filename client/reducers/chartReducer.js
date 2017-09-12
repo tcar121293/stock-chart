@@ -51,12 +51,14 @@ export default function chartReducer(
     switch(action.type){
 
         case 'STOCK_DATA':{
-          
+          const color = state.config.series.length
+          console.log(color)
                 return {...state,
                     exists:false,
                     config:{...state.config,
                         series:[...state.config.series,
-                        action.payload.config
+                        action.payload.config,
+                        
                         ]
                     
                     },
@@ -86,7 +88,11 @@ export default function chartReducer(
         }
         case 'DELETE_STOCK':{
             return{...state,
-                symbols:action.payload
+                symbols:action.payload.payload,
+                config:{...state.config,
+                    series:action.payload.series
+
+                }
 
             }
         }

@@ -21,9 +21,13 @@ export function storeData(data){
         const confi = data.data.map((data)=>{
             return [new Date(data[0]).getTime(), data[4]];
         })
+        const number = Math.floor(Math.random() * 10)
+        
         const config = {
             name:data.name,
-            data:confi
+            data:confi,
+            symbol:data.dataset_code,
+            _colorIndex:number
         }
         
         console.log(data)
@@ -45,10 +49,13 @@ export function init(){
                 const confi = data.data.map((data)=>{
                     return [new Date(data[0]).getTime(), data[4]];
                 })
-                console.log(res.data)
+                const number = Math.floor(Math.random() * 10)
+                
                 return {
                     name:data.name,
-                    data:confi
+                    data:confi,
+                    symbol:data.dataset_code,
+                    _colorIndex:number
                 }
                 
             })
@@ -65,7 +72,7 @@ export function init(){
     }
 }
 
-export function deleteStock(symbol, payload){
+export function deleteStock(symbol){
 
     return dispatch =>{
         axios({
@@ -73,13 +80,16 @@ export function deleteStock(symbol, payload){
             url:'/deleteStock',
             data:symbol
         })
-        console.log(symbol,payload)
-        dispatch({type:'DELETE_STOCK',payload:payload})
     }
-   
 
+}
 
-
-
+export function deleteLocalStock(payload){
+    return dispatch=>{
+        console.log(payload)
+        dispatch({type:'DELETE_STOCK',payload:payload})
+        
+    }
+    
 }
     

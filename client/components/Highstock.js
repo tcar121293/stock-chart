@@ -9,9 +9,8 @@ export default class Highstock extends Component{
     render(){
         return(
             <div>
-            <button onClick={()=>{this.change()}}>change</button>
           
-            <ReactHighstock config = {this.props.config}></ReactHighstock>
+            <ReactHighstock ref='chart' config = {this.props.config}></ReactHighstock>
             </div>
         )
     }

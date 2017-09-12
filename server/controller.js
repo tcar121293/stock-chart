@@ -25,6 +25,7 @@ sendData:async (req,res,next)=>{
                 newStock.symbol = data.data.dataset.dataset_code
                 await newStock.save()
                 res.io.emit('sendData',data.data.dataset)
+                res.end()
             }
           
          
@@ -82,7 +83,8 @@ deleteStock:async (req,res,next)=>{
 try{
     const symbol = req.body.symbol
     const stock = await Stock.remove({symbol:symbol})
-    res.send('ok')
+    res.io.emit('deleteStock', symbol)
+    res.end()
 }catch(err){
 
 }
