@@ -17,7 +17,8 @@ module:{
             exclude: /(node_modules)/,
             query:{
                 presets:['react', 'es2015', "stage-3"],
-                plugins: ["transform-object-rest-spread"]
+                plugins: ["transform-object-rest-spread", 'recharts']
+                
             }
     },
     {

@@ -5,7 +5,17 @@ const controller = require('./controller')
 
 router.route('/')
     .post(controller.sendData)
-router.route('/getStocks')
+router.route('/stocks')
     .get(controller.getStocks)
+    .delete(controller.deleteStocks)
+
+router.route('/getStocks')
+.get(controller.stocks)
+
+router.route('/deleteStock')
+    .delete(controller.deleteStock)
+
+    
+    
 
 module.exports = router

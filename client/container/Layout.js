@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import io from 'socket.io-client';
 const socket = io('http://localhost:3000')
 
-import { sendData, storeData } from '../actions/chartActions'
+import { sendData, storeData, init, deleteStock } from '../actions/chartActions'
 
 import Chart from '../components/Chart'
 
@@ -12,16 +12,17 @@ constructor(){
     super()
     this.sendData = this.sendData.bind(this)
     socket.on('sendData',(data)=>{
-        var hiJson = data.data.map(function(d) {
-            return [new Date(d[0]).getTime(), d[4]]
-          });
      
         this.props.storeData(data)
     })
 
+    this.deleteStock = this.deleteStock.bind(this)
+    
 }
 
-
+componentWillMount(){
+    this.props.init()
+}
 
 
 
@@ -29,8 +30,11 @@ constructor(){
         return(
             <div>
                <Chart  
-               series = {this.props.series}
+               symbols={this.props.symbols}
+              exists={this.props.exists}
+               config = {this.props.config}
                sendData = {this.sendData}
+               deleteStock = {this.deleteStock}
                 />
             </div>
         )
@@ -44,7 +48,18 @@ sendData(){
     this.props.sendData({'symbol':symbol})
 
 }
+deleteStock(symbol){
+    
+    const payload = this.props.symbols.filter((data)=>{
+        return data!==symbol.symbol
+    })
+    console.log(payload)
+    this.props.deleteStock(symbol,payload)
+    
+  
 
+    
+}
 
 
 
@@ -52,17 +67,25 @@ sendData(){
 
 const mapStateToProps = (state)=>{
     return{
-    series: state.chart.series
+    exists:state.chart.exists,
+    config:state.chart.config,
+    symbols:state.chart.symbols
 
     }
 }
 const mapDispatchToProps = (dispatch)=>{
     return{
       sendData:(symbol)=>{
-          sendData(symbol)
+          dispatch(sendData(symbol))
       },
       storeData: (data)=>{
           dispatch(storeData(data))
+      },
+      init:()=>{
+          dispatch(init())
+      },
+      deleteStock:(symbol,payload)=>{
+          dispatch(deleteStock(symbol,payload))
       }
     }
 }
